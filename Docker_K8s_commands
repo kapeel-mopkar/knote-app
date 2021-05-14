@@ -1,0 +1,11 @@
+docker run --name=mongo --rm --network=knote mongo
+
+docker build -t knote-java .
+docker tag knote-java kapeelmopkar/knote-java:1.0.0
+docker push kapeelmopkar/knote-java:1.0.0
+docker run   --name=knote-java   --rm   --network=knote   -p 8080:8080   -e MONGO_URL=mongodb://mongo:27017/dev   kapeelmopkar/knote-java:1.0.0
+
+kubectl apply -f kube
+kubectl get po --watch
+kubectl scale --replicas=1 deployment/knote
+minikube service knote --url
